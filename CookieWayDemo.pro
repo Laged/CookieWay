@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    imagereader.cpp
+    imagereader.cpp \
+    surveyfiller.cpp
 
 HEADERS  += mainwindow.h \
-    imagereader.h
+    imagereader.h \
+    surveyfiller.h
 
 FORMS    += mainwindow.ui

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "imagereader.h"
+#include "surveyfiller.h"
 
 namespace Ui {
 class MainWindow;
@@ -15,6 +16,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     void setReader(ImageReader* newReader);
+    void setFiller(SurveyFiller* newFiller);
     ~MainWindow();
 
 protected:
@@ -24,6 +26,8 @@ protected:
 private:
     Ui::MainWindow *ui;
     ImageReader* currentReader = 0;
+    SurveyFiller* currentFiller = 0;
+    void updateStatus(QString newStatus);
 
 };
 

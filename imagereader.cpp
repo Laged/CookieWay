@@ -8,6 +8,7 @@ ImageReader::ImageReader()
 
 QString ImageReader::readImage(QString fileName)
 {
+    //TODO: OCR the image and parse it for relevant data
 
-    return QString("OCR NOT IMPLEMETED - FILE GIVEN: " + fileName);
+    return QString("ImageReader::readImage NOT IMPLEMETED - FILE GIVEN: " + fileName);
 }

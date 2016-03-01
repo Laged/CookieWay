@@ -16,6 +16,10 @@ void MainWindow::setReader(ImageReader* newReader) {
     currentReader = newReader;
 }
 
+void MainWindow::setFiller(SurveyFiller* newFiller) {
+    currentFiller = newFiller;
+}
+
 //Accept drag events
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
@@ -36,15 +40,27 @@ void MainWindow::dropEvent(QDropEvent *event)
     if (fileName.isEmpty())
         return;
 
+    //TODO: Check if the file is an image (.png / .jpg or whatever is ok for OpenCV OCR??)
+
     //File is valid, OCR dat shit and get content
+    updateStatus("Reading the receipt");
     QString currentFile = QString(fileName);
     QString fileContent = currentReader->readImage(currentFile);
     //Debug content
     qDebug() << fileContent;
 
-    //TODO: Validate content and fill survey
+
+    //TODO: Validate content?
+    updateStatus("Filling the survey");
+    currentFiller->fillSurvey(fileContent);
     //TODO: Show cookie code in UI
     //TODO: :-D COOKIEZ
+    updateStatus("Waiting for input..");
+}
+
+
+void MainWindow::updateStatus(QString newStatus) {
+    ui->labelOutput->setText(newStatus);
 }
 
 MainWindow::~MainWindow()

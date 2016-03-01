@@ -10,6 +10,9 @@ int main(int argc, char *argv[])
     //Init ImageReader and set it to MainWindow
     ImageReader* currentReader = new ImageReader();
     w.setReader(currentReader);
+    //Init SurveyFiller and set it to MainWindow
+    SurveyFiller* currentFiller = new SurveyFiller();
+    w.setFiller(currentFiller);
     //Show MainWindow
     w.show();
 
