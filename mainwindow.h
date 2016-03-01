@@ -28,6 +28,7 @@ private:
     ImageReader* currentReader = 0;
     SurveyFiller* currentFiller = 0;
     void updateStatus(QString newStatus);
+    void getCookie(QString fileName);
 
 };
 

@@ -21,4 +21,6 @@ HEADERS  += mainwindow.h \
     imagereader.h \
     surveyfiller.h
 
+LIBS += -llept -ltesseract
+
 FORMS    += mainwindow.ui
