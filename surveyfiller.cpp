@@ -14,5 +14,5 @@ QString SurveyFiller::fillSurvey(QString surveyData) {
     //TODO: Fill the survey
     qDebug() << "SurveyFiller::fillSurvey NOT IMPLEMETED";
 
-    return QString("SurveyFiller::fillSurvey NOT IMPLEMETED - STRING GIVEN: " + surveyData);
+    return QString("SurveyFiller::fillSurvey NOT IMPLEMETED - STRING GIVEN:\n " + surveyData);
 }

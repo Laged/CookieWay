@@ -27,7 +27,7 @@ QString ImageReader::readImage(QString fileName)
     //OCR the image in the file
     Pix* image = pixRead(fileName.toUtf8());
     //TODO: MANIPULATE THE IMAGE TO MAKE OCR BETTER ???
-    tesseract->SetImage(image);
+   tesseract->SetImage(image);
     QString output(tesseract->GetUTF8Text());
     qDebug() << "OCR DONE";
     return output;
