@@ -7,7 +7,7 @@ class ImageReader
 {
 public:
     ImageReader();
-    QString readImage(QString fileName);
+    QStringList readImage(QString fileName);
 
 };
 

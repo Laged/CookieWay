@@ -3,6 +3,7 @@
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
 #include <locale.h>
+#include <QStringList>
 
 ImageReader::ImageReader()
 {
@@ -12,23 +13,27 @@ ImageReader::ImageReader()
 //Takes a path to an image
 //Uses OCR on the image
 //Returns the needed text fields from the receipt for survey filling
-//TODO: Refactor output to QStringList with the needed fields? ALEKSI TEE TÄÄ :D
-QString ImageReader::readImage(QString fileName)
+QStringList ImageReader::readImage(QString fileName)
 {
     qDebug() << "Reading image: " + fileName;
+    //Init fieldContents to store the fields we find
+    QStringList fieldContents;
     //Init Tesseract
     tesseract::TessBaseAPI* tesseract = new tesseract::TessBaseAPI();
     setlocale(LC_NUMERIC, "C");
     if(tesseract->Init(NULL, "eng")) {
         qDebug() << "Could not init tesseract";
-        return QString("");
+        return fieldContents;
     }
 
     //OCR the image in the file
     Pix* image = pixRead(fileName.toUtf8());
-    //TODO: MANIPULATE THE IMAGE TO MAKE OCR BETTER ???
+    //TODO: MANIPULATE THE IMAGE TO MAKE OCR BETTER
    tesseract->SetImage(image);
     QString output(tesseract->GetUTF8Text());
     qDebug() << "OCR DONE";
-    return output;
+    //TODO: Fill fieldContents with the actual content from OCR (Parse OCR)
+    fieldContents << "THIS" << "IS" << "A" << "TEST";
+    qDebug() << fieldContents;
+    return fieldContents;
 }

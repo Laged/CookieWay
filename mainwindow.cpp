@@ -67,7 +67,7 @@ void MainWindow::getCookie(QString fileName) {
     updateStatus("Reading the receipt");
     QString currentFile = QString(fileName);
     updateStatus(currentFile);
-    QString fileContent = currentReader->readImage(currentFile);
+    QStringList fileContent = currentReader->readImage(currentFile);
     //Debug content
     qDebug() << fileContent;
 

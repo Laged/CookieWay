@@ -7,7 +7,7 @@ class SurveyFiller
 {
 public:
     SurveyFiller();
-    QString fillSurvey(QString surveyData);
+    QString fillSurvey(QStringList surveyData);
 };
 
 #endif // SURVEYFILLER_H
