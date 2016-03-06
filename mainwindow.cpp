@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDragEnterEvent>
+#include <QPixmap>
 #include <QMimeData>
 #include <QDebug>
 
@@ -44,15 +45,39 @@ void MainWindow::dropEvent(QDropEvent *event)
         return;
 
     //TODO: Check if the file is an image (.png / .jpg or whatever is ok for OpenCV OCR??)
-    updateStatus("New receipt given");
     //getCookie: call the main method with the image
     getCookie(fileName);
 }
 
-//Updates the status to the UI
-void MainWindow::updateStatus(QString newStatus) {
-    qDebug() << "New status: " + newStatus;
+/*Updates the status to the UI
+ * Accepts a secondary parameter, newPageIndex, for changing pages in the stackedWidget
+ * Page numbering:
+ *     0 - Initial page, drag&drop (ask user to give a receipt)
+ *     1 - Reading the receipt (show user the given receipt)
+ *     2 - Waiting for user review & filling the survey (ask user to input a review)
+ *     3 - Here's your cookie (show the cookie code for free cookiez)
+ *
+ * TODO: FIX BUG OF PAGES 1/2 NOT UPDATING
+ */
+void MainWindow::updateStatus(QString newStatus, int newPageIndex) {
+    qDebug() << "New status: " + newStatus + " at page " + QString::number(newPageIndex);
+    //Change the label
     ui->labelOutput->setText(newStatus);
+    //Change page if specified (newPageIndex default value = -1)
+    if(newPageIndex >= 0) {
+        currentPageIndex = newPageIndex;
+        ui->stackedWidgetInput->setCurrentIndex(currentPageIndex);
+    }
+}
+
+void MainWindow::updateImage(QString filePath) {
+    QPixmap newImage(filePath);
+    //TODO: resize image, set it to page1 background
+    //ui->labelImage->setPixmap(newImage);
+}
+
+void MainWindow::updateResult(QString cookieCode) {
+    ui->labelCookieCode->setText(cookieCode);
 }
 
 /*THE IMPORTANT STUFF IS HERE
@@ -63,20 +88,19 @@ void MainWindow::updateStatus(QString newStatus) {
   Updates the UI with the code for a free cookie
 */
 void MainWindow::getCookie(QString fileName) {
-    //File is valid, OCR dat shit and get content
-    updateStatus("Reading the receipt");
+    //Phase 1: File is valid, OCR dat shit and get content
     QString currentFile = QString(fileName);
-    updateStatus(currentFile);
+    updateImage(currentFile);
+    updateStatus("Reading the receipt", 1);
     QStringList fileContent = currentReader->readImage(currentFile);
     //Debug content
     qDebug() << fileContent;
-
-
-    //TODO: Validate content?
-    updateStatus("Filling the survey");
+    //TODO: Phase 2: Validate content, ask for user review
+    updateStatus("Waiting for user review (TODO)", 2);
+    //TODO: Phase 3: Fill survey, show cookie code
     QString cookieCode = currentFiller->fillSurvey(fileContent);
-    //TODO: Show cookie code in UI
-    updateStatus(cookieCode);
+    updateResult(cookieCode);
+    updateStatus("Enjoy your cookie!", 3);
     //TODO: :-D COOKIEZ
 }
 

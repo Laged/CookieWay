@@ -27,8 +27,11 @@ private:
     Ui::MainWindow *ui;
     ImageReader* currentReader = 0;
     SurveyFiller* currentFiller = 0;
-    void updateStatus(QString newStatus);
+    void updateStatus(QString newStatus, int newPageIndex = -1);
+    void updateImage(QString filePath);
+    void updateResult(QString cookieCode);
     void getCookie(QString fileName);
+    int currentPageIndex = 0;
 
 };
 
