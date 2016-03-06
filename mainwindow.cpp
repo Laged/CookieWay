@@ -72,7 +72,7 @@ void MainWindow::updateStatus(QString newStatus, int newPageIndex) {
 
 void MainWindow::updateImage(QString filePath) {
     QPixmap newImage(filePath);
-    //TODO: resize image, set it to page1 background
+    //TODO: resize image, set it to page1 background without affecting the layout
     //ui->labelImage->setPixmap(newImage);
 }
 

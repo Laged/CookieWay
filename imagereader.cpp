@@ -33,7 +33,7 @@ QStringList ImageReader::readImage(QString fileName)
     QString output(tesseract->GetUTF8Text());
     qDebug() << "OCR DONE";
     //TODO: Fill fieldContents with the actual content from OCR (Parse OCR)
-    fieldContents << "THIS" << "IS" << "A" << "TEST";
+    fieldContents << "RESTAURANTCODE" << "DATE" << "RECEIPTCODE";
     qDebug() << fieldContents;
     return fieldContents;
 }
