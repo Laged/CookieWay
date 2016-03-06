@@ -1,0 +1,20 @@
+CookieWay is a program that takes a picture of a receipt as the input, automatically fills a survey at tellsubway.fi with the data from the receipt and shows a code for a free cookie as the output. The final product will be a mobile application, but the first iterations will work as a MVP of the product as a desktop version.
+
+Go through the structure of CookieWay starting from main.cpp and mainwindow.cpp to understand how the program is supposed to work. Some properties are lacking or implemented in a clumsy way - feel free to fix them. The rest of the CookieWay team will do some work on the project as well. For example, you don't have to worry about the actual OCR part in ImageReader::readImage, you can assume that it will give you the proper data when given an image of a receipt. The code has some comments about TODOs - you can work on them if you have time, but focus on the assignment below.
+
+Implement the missing properties of CookieWay, ordered by priority:
+
+1) SurveyFiller::fillSurvey will be called with surveyData (a QStringList) that contains the information for filling the survey at tellsubway.fi in the following order:
+    Restaurant code - surveyData[0]
+    Date (dd/mm/yyyy) - surveyData[1]
+    Receipt code - surveyData[2]
+
+Implement the actual survey filling at tellsubway.fi with the given data. For now the user review part of the can be randomized, but keep in mind that in the future the user will be asked to input the data for that as well.
+
+You might want to check out the possibilities around DOM manipulation or JS injection in Qt for the technical implementation.
+
+2) The UI implemented in mainwindow.ui is a rough draft of the actual UI of the program. You will get the design for the actual UI with the necessary graphics within the first week of the project. The structure of the UI and the logic behind it in mainwindow.cpp shouldn't be going through big changes - the lower part of the program serves as a "status bar" via a label while the upper part consists of a QStackedWidget that is used to show the current phase of the program.
+
+Implement the necessary changes so the program's UI matches the actual UI design. The current implementation of the UI relies on the styling being done through Qt Creator within mainwindow.ui - refactor ALL OF THE STYLING to an external file called styles.qss. This is a must so the UI design can be easily reused in the future for the web frontend of CookieWay. Make sure the .ui file(s) are used only for the structure of the UI, the styling should come from styles.qss.
+
+3) Make sure you understand the code so you can verbally describe how the program works. Go through the program, test it thoroughly. Try to find bugs - either in the actual implementation or the design of the program. Be prepared to present your implementation of the missing properties 
