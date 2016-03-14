@@ -1,9 +1,12 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include "imagereader.h"
-
+#include <QLoggingCategory>
 int main(int argc, char *argv[])
 {
+    // Set SSL restrictions off
+    QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
+
     //Init QApplication and MainWindow
     QApplication a(argc, argv);
     MainWindow w;
