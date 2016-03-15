@@ -15,11 +15,12 @@ public:
     SurveyFiller();
     QString fillSurvey(QStringList surveyData);
 public slots:
-    void printkalja(bool a);
+    void pageReady(bool a);
+    void getEmail();
 private:
     QWebView *webView;
-
-
+    QString emailAddress;
+    void fillPage();
 };
 
 #endif // SURVEYFILLER_H
