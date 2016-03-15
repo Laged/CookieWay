@@ -108,13 +108,16 @@ void SurveyFiller::fillPage() {
     // no spam pls pt.2
     frame->evaluateJavaScript("document.getElementById('DdlContact').value = 'No';");
 
+
+
+    webView->setUrl(QUrl(emailAddress+".yopmail.com/en/"));
+
 }
 
 void SurveyFiller::getEmail() {
 
 
     qDebug() << "GETTING EMAIL";
-    webView->load(QUrl(emailAddress+".yopmail.com/en/"));
 
     QWebFrame *frame = webView->page()->currentFrame();
     QWebElement e = frame->findFirstElement(QString("#mailmillieu"));
@@ -123,7 +126,7 @@ void SurveyFiller::getEmail() {
 
     if (kaliaa == "") { // size < 200 etc, there is no email from subway
         // load page again
-        getEmail();
+        webView->load(QUrl(emailAddress+".yopmail.com/en/"));
 
     } else {
 
