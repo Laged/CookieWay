@@ -7,6 +7,7 @@
 
 SurveyFiller::SurveyFiller(): webView(new QWebView(NULL))
 {
+    emailAddress = "kaljaa";
     qDebug() << "Init SurveyFiller()";
 }
 
@@ -15,16 +16,13 @@ SurveyFiller::SurveyFiller(): webView(new QWebView(NULL))
 //Returns the code for a free cookie
 QString SurveyFiller::fillSurvey(QStringList surveyData) {
 
-
-    connect(webView, SIGNAL(loadFinished(bool)), SLOT(printkalja(bool)) );
+    connect(webView, SIGNAL(loadFinished(bool)), SLOT(pageReady(bool)) );
 
     webView->setGeometry(0,0,200,200);
     webView->show();
     qDebug() << "GEOMETRIA ASETETTU";
-    //webView->load(QUrl("http://www.yopmail.com/en/"));
 
-    //webView->load(QUrl("http://users.aalto.fi/~yrjanav1/QT_JS_TEST/index.html"));
-    webView->load(QUrl("https://www.tellsubway.fi/ContentManager/Controller.aspx?page=CustomerExperience/SurveyNew&surveyId=320&storeId=65355-0"));
+    webView->load(QUrl("https://www.tellsubway.fi/ContentManager/Controller.aspx?page=CustomerExperience/SurveyNew&surveyId=320&storeId="+surveyData[0]+"-0"));
 
     //
     qDebug() << "ELEMENTTIA EI VIELA HAETTU";
@@ -33,12 +31,6 @@ QString SurveyFiller::fillSurvey(QStringList surveyData) {
     QWebElement e = webView->page()->currentFrame()->findFirstElement(QString("#teksti"));
     // Get inner HTML from the element
     QString kaliaa = e.toPlainText();
-
-    qDebug() << "NYT ELEMENTTI:";
-/*  testing search reslts
-    if (!(webView.page()->currentFrame())) qDebug() << "FRAME IS NULL: true";
-    if (e.isNull()) qDebug() << "ELEMENT IS NULL: true";
-    */
 
     qDebug() << kaliaa;
 
@@ -50,7 +42,19 @@ QString SurveyFiller::fillSurvey(QStringList surveyData) {
     return QString("SurveyFiller::fillSurvey NOT IMPLEMETED");
 }
 
-void SurveyFiller::printkalja(bool a) {
+void SurveyFiller::pageReady(bool a) {
+    if (a) {
+        if (false) { // if this phase has not yet been executed
+            fillPage();
+        } else {
+            getEmail();
+        }
+    } else {
+        qDebug() << "An error occured while loading the page";
+    }
+}
+
+void SurveyFiller::fillPage() {
 
 
     QWebFrame *frame = webView->page()->currentFrame();
@@ -73,20 +77,11 @@ void SurveyFiller::printkalja(bool a) {
     frame->evaluateJavaScript("document.getElementById('answ39287Q8255').click();");
 
     // next one, six questions in this field
-    // the numbering system is a bit complicated
-    // fourth number is the index of the question if value ranges from 7-10
-    // fifth number is index + value - 9
-
-    // whatever, just bruteforce
-
+    // whatever
     // everything 9/10
 
-    // answ39300C8257Q8256
-    // answ39311C8258Q8256
-    // answ39322C8259Q8256
-    // answ39333C8260Q8256
-    // answ39344C8261Q8256
-    // answ39355C8262Q8256
+    // answ39300C8257Q8256,answ39311C8258Q8256,answ39322C8259Q8256,answ39333C8260Q8256
+    // answ39344C8261Q8256, answ39355C8262Q8256
 
     frame->evaluateJavaScript("document.getElementById('answ39300C8257Q8256').click();");
     frame->evaluateJavaScript("document.getElementById('answ39311C8258Q8256').click();");
@@ -94,7 +89,6 @@ void SurveyFiller::printkalja(bool a) {
     frame->evaluateJavaScript("document.getElementById('answ39333C8260Q8256').click();");
     frame->evaluateJavaScript("document.getElementById('answ39344C8261Q8256').click();");
     frame->evaluateJavaScript("document.getElementById('answ39355C8262Q8256').click();");
-
 
     // positive feedback
     frame->evaluateJavaScript("document.getElementById('answ8275').value = 39402;");
@@ -106,7 +100,7 @@ void SurveyFiller::printkalja(bool a) {
     frame->evaluateJavaScript("document.getElementById('answ8280').value = (Math.floor(Math.random()*10)) + +30+10+39405;");
 
     // fill email
-    frame->evaluateJavaScript("document.getElementById('answ8281').value = 'kaljakalja@email.com';");
+    frame->evaluateJavaScript("document.getElementById('answ8281').value = '"+ emailAddress+"@yopmail.com';");
 
     // no spam pls
     frame->evaluateJavaScript("document.getElementById('answ8282').value = 'No';");
@@ -114,7 +108,29 @@ void SurveyFiller::printkalja(bool a) {
     // no spam pls pt.2
     frame->evaluateJavaScript("document.getElementById('DdlContact').value = 'No';");
 
-    //rame->evaluateJavaScript()
-    //frame->evaluateJavaScript("SearchStore()");
-    //frame->evaluateJavaScript("CloseAndGo()");
+}
+
+void SurveyFiller::getEmail() {
+
+
+    qDebug() << "GETTING EMAIL";
+    webView->load(QUrl(emailAddress+".yopmail.com/en/"));
+
+    QWebFrame *frame = webView->page()->currentFrame();
+    QWebElement e = frame->findFirstElement(QString("#mailmillieu"));
+    // Get inner HTML from the element
+    QString kaliaa = e.toPlainText();
+
+    if (kaliaa == "") { // size < 200 etc, there is no email from subway
+        // load page again
+        getEmail();
+
+    } else {
+
+        qDebug() << kaliaa;
+
+        // TODO : SEARCH CODE FROM EMAIL
+    }
+
+
 }
