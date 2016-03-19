@@ -16,10 +16,13 @@ public:
     QString fillSurvey(QStringList surveyData);
 public slots:
     void pageReady(bool a);
+    void emailReady(bool a);
     void getEmail();
 private:
     QWebView *webView;
+    QWebView *webView1;
     QString emailAddress;
+    int loadcount = 0;
     void fillPage();
 };
 
