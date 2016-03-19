@@ -5,7 +5,7 @@
 #include <QObject>
 
 
-SurveyFiller::SurveyFiller(): webView(new QWebView(NULL))
+SurveyFiller::SurveyFiller(): webView(new QWebView(NULL)), webView1(new QWebView(NULL))
 {
     emailAddress = "kaljaa";
     qDebug() << "Init SurveyFiller()";
@@ -17,45 +17,50 @@ SurveyFiller::SurveyFiller(): webView(new QWebView(NULL))
 QString SurveyFiller::fillSurvey(QStringList surveyData) {
 
     connect(webView, SIGNAL(loadFinished(bool)), SLOT(pageReady(bool)) );
+    connect(webView1, SIGNAL(loadFinished(bool)), SLOT(emailReady(bool)) );
 
-    webView->setGeometry(0,0,200,200);
+    webView->setGeometry(0,0,400,400);
     webView->show();
+
+    webView1->setGeometry(0,0,400,400);
+    webView1->show();
+
     qDebug() << "GEOMETRIA ASETETTU";
 
     webView->load(QUrl("https://www.tellsubway.fi/ContentManager/Controller.aspx?page=CustomerExperience/SurveyNew&surveyId=320&storeId="+surveyData[0]+"-0"));
 
-    //
     qDebug() << "ELEMENTTIA EI VIELA HAETTU";
-
-    // Find an element with "teskti" id from the text
-    QWebElement e = webView->page()->currentFrame()->findFirstElement(QString("#teksti"));
-    // Get inner HTML from the element
-    QString kaliaa = e.toPlainText();
-
-    qDebug() << kaliaa;
 
     qDebug() << "SurveyFiller::fillSurvey NOT IMPLEMETED - given data:";
     qDebug() << "Restaurant code: " + surveyData[0];
     qDebug() << "Date (dd/mm/yyyy): " + surveyData[1];
     qDebug() << "Receipt code: " + surveyData[2];
+    qDebug() << "Time: " + surveyData[3];
+
+    webView1->load(QUrl("http://kaljaa.yopmail.com/en/"));
 
     return QString("SurveyFiller::fillSurvey NOT IMPLEMETED");
 }
 
 void SurveyFiller::pageReady(bool a) {
+    qDebug() << "load finished";
     if (a) {
-        if (false) { // if this phase has not yet been executed
-            fillPage();
-        } else {
-            getEmail();
-        }
+        fillPage();
+    } else {
+        qDebug() << "An error occured while loading the page";
+    }
+}
+
+void SurveyFiller::emailReady(bool a) {
+    qDebug() << "load finished";
+    if (a) {
+        getEmail();
     } else {
         qDebug() << "An error occured while loading the page";
     }
 }
 
 void SurveyFiller::fillPage() {
-
 
     QWebFrame *frame = webView->page()->currentFrame();
 
@@ -76,10 +81,7 @@ void SurveyFiller::fillPage() {
     // satisfaction 1-10, fifth number of element id is the value (7)
     frame->evaluateJavaScript("document.getElementById('answ39287Q8255').click();");
 
-    // next one, six questions in this field
-    // whatever
-    // everything 9/10
-
+    // next one, six questions in this field, everything 9/10
     // answ39300C8257Q8256,answ39311C8258Q8256,answ39322C8259Q8256,answ39333C8260Q8256
     // answ39344C8261Q8256, answ39355C8262Q8256
 
@@ -97,36 +99,42 @@ void SurveyFiller::fillPage() {
     // how often do you eat at restaurant
     frame->evaluateJavaScript("document.getElementById('answ8279').value = (Math.floor(Math.random()*10)) + 10+39405;");
     // how often subway
-    frame->evaluateJavaScript("document.getElementById('answ8280').value = (Math.floor(Math.random()*10)) + +30+10+39405;");
+    frame->evaluateJavaScript("document.getElementById('answ8280').value = (Math.floor(Math.random()*10)) + +30+20+39405;");
 
     // fill email
     frame->evaluateJavaScript("document.getElementById('answ8281').value = '"+ emailAddress+"@yopmail.com';");
-
     // no spam pls
     frame->evaluateJavaScript("document.getElementById('answ8282').value = 'No';");
-
     // no spam pls pt.2
     frame->evaluateJavaScript("document.getElementById('DdlContact').value = 'No';");
 
+    // submit
+    frame->evaluateJavaScript("document.getElementById('btnSubmit').click();");
 
+    // while there is no code on the page
+    while (!(frame->findFirstElement("ctl03_lblTag").isNull() ) ) {
+        qDebug() << "Code page not loaded";
+    }
 
-    webView->setUrl(QUrl(emailAddress+".yopmail.com/en/"));
+    // return value
+    frame->findFirstElement("ctl03_lblTag").toPlainText();
 
 }
+
+
 
 void SurveyFiller::getEmail() {
 
 
     qDebug() << "GETTING EMAIL";
 
-    QWebFrame *frame = webView->page()->currentFrame();
-    QWebElement e = frame->findFirstElement(QString("#mailmillieu"));
     // Get inner HTML from the element
-    QString kaliaa = e.toPlainText();
+    QString kaliaa = webView1->page()->currentFrame()->findFirstElement(QString("#ifmail")).toPlainText();
 
     if (kaliaa == "") { // size < 200 etc, there is no email from subway
         // load page again
-        webView->load(QUrl(emailAddress+".yopmail.com/en/"));
+        webView1->load(QUrl("http://kaljaa.yopmail.com/en/"));
+        //webView->load(QUrl("kaljaa.yopmail.com/en/"));
 
     } else {
 
