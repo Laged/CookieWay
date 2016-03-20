@@ -14,6 +14,9 @@ class SurveyFiller: public QObject
 public:
     SurveyFiller();
     QString fillSurvey(QStringList surveyData);
+signals:
+    void codeReady(QString code);
+
 public slots:
     void pageReady(bool a);
     void emailReady(bool a);
