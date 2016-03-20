@@ -80,6 +80,12 @@ void MainWindow::updateResult(QString cookieCode) {
     ui->labelCookieCode->setText(cookieCode);
 }
 
+void MainWindow::receiveCode(QString code) {
+    qDebug() << "Update cookie code";
+
+    updateResult(code);
+}
+
 /*THE IMPORTANT STUFF IS HERE
   getCookie: the main method for getting a cookie
   Takes a valid fileName to an image
@@ -99,6 +105,7 @@ void MainWindow::getCookie(QString fileName) {
     updateStatus("Waiting for user review (TODO)", 2);
     //TODO: Phase 3: Fill survey, show cookie code
     QString cookieCode = currentFiller->fillSurvey(fileContent);
+    connect(currentFiller, SIGNAL(codeReady(QString)), SLOT(receiveCode(QString)));
     updateResult(cookieCode);
     updateStatus("Enjoy your cookie!", 3);
     //TODO: :-D COOKIEZ
