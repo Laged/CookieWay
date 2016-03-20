@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT +=   core
 QT      += webkitwidgets
 QT      += webkit
 
