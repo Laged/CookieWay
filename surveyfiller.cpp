@@ -26,7 +26,7 @@ QString SurveyFiller::fillSurvey(QStringList surveyData) {
     webView->show();
 
     webView1->setGeometry(0,0,400,400);
-    webView1->show();
+   // webView1->show();
 
     qDebug() << "GEOMETRIA ASETETTU";
 
@@ -51,15 +51,7 @@ void SurveyFiller::pageReady(bool a) {
         fillPage();
     } else {
         qDebug() << "An error occured while loading the page";
-    }
-}
-
-void SurveyFiller::emailReady(bool a) {
-    qDebug() << "load finished";
-    if (a) {
-        getEmail();
-    } else {
-        qDebug() << "An error occured while loading the page";
+        emit codeReady("An error occured while loading the page");
     }
 }
 
@@ -115,22 +107,6 @@ void SurveyFiller::fillPage() {
     // submit
     frame->evaluateJavaScript("document.getElementById('btnSubmit').click();");
 
-
-    QTimer *timer = new QTimer;
-    /*
-
-    // while there is no code on the page
-    while ((frame->findFirstElement("#ctl03_lblTag").isNull() && loopCount < 5) ) {
-
-        timer->setInterval(500);
-        loopCount++;
-        QString kalja = (webView1->page()->currentFrame()->findFirstElement("#teksti").toPlainText() );
-        qDebug() << "Code page not loaded";
-        qDebug() << "Test page element inner html: ";
-        qDebug() << kalja;
-    }
-    */
-
     frame = webView->page()->currentFrame();
     // return value
     qDebug() << "COOKIE CODE:";
@@ -144,37 +120,12 @@ void SurveyFiller::fillPage() {
 
 }
 
-
-
-void SurveyFiller::getEmail() {
-
-
-    qDebug() << "GETTING EMAIL";
-
-    // Get inner HTML from the element
-    QString kaliaa = webView1->page()->currentFrame()->findFirstElement(QString("#ifmail")).toPlainText();
-
-    if (kaliaa == "") { // size < 200 etc, there is no email from subway
-        // load page again
-        webView1->load(QUrl("http://kaljaa.yopmail.com/en/"));
-        //webView->load(QUrl("kaljaa.yopmail.com/en/"));
-
-    } else {
-
-        qDebug() << kaliaa;
-
-        // TODO : SEARCH CODE FROM EMAIL
-    }
-
-
-}
-
 QString SurveyFiller::randomEmail()
 {
    // cookie codes are restricted to 1 per 24 hours per email
    // so create a random string
 
-    qsrand(QTime::currentTime().msec());
+   qsrand(QTime::currentTime().msec());
    QString chars("abcdefghijklmnopqrstuvwxyz0123456789");
    const int randomStringLength = 4 + (qrand() % 8) ;
    QString randomString;
