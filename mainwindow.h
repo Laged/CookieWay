@@ -33,6 +33,8 @@ private:
     void getCookie(QString fileName);
     int currentPageIndex = 0;
 
+public slots:
+    void receiveCode(QString code);
 };
 
 #endif // MAINWINDOW_H
