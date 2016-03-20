@@ -4,10 +4,11 @@
 #include <QThread>
 #include <QObject>
 #include <QTimer>
+#include <QtGlobal>
+
 
 SurveyFiller::SurveyFiller(): webView(new QWebView(NULL)), webView1(new QWebView(NULL))
 {
-    emailAddress = "kaljaa";
     qDebug() << "Init SurveyFiller()";
 }
 
@@ -39,7 +40,7 @@ QString SurveyFiller::fillSurvey(QStringList surveyData) {
     qDebug() << "Receipt code: " + surveyData[2];
     qDebug() << "Time: " + surveyData[3];
 
-    webView1->load(QUrl("http://kaljaa.yopmail.com/en/"));
+    webView1->load(QUrl("http://users.aalto.fi/~yrjanav1/QT_JS_TEST/"));
 
     return QString("SurveyFiller::fillSurvey NOT IMPLEMETED");
 }
@@ -100,12 +101,12 @@ void SurveyFiller::fillPage() {
     // wanna ask a question
     frame->evaluateJavaScript("document.getElementById('answ8277').value = 39405;");
     // how often do you eat at restaurant
-    frame->evaluateJavaScript("document.getElementById('answ8279').value = (Math.floor(Math.random()*10)) + 30+39405;");
+    frame->evaluateJavaScript("document.getElementById('answ8279').value = 39437;");
     // how often subway
     frame->evaluateJavaScript("document.getElementById('answ8280').value = (Math.floor(Math.random()*10)) + +30+10+39405;");
 
     // fill email
-    frame->evaluateJavaScript("document.getElementById('answ8281').value = '"+ emailAddress+"@yopmail.com';");
+    frame->evaluateJavaScript("document.getElementById('answ8281').value = '"+ randomEmail() +"';");
     // no spam pls
     frame->evaluateJavaScript("document.getElementById('answ8282').value = 'No';");
     // no spam pls pt.2
@@ -116,17 +117,31 @@ void SurveyFiller::fillPage() {
 
 
     QTimer *timer = new QTimer;
+    /*
+
     // while there is no code on the page
-    while (!(frame->findFirstElement("#ctl03_lblTag").isNull() ) ) {
+    while ((frame->findFirstElement("#ctl03_lblTag").isNull() && loopCount < 5) ) {
+
         timer->setInterval(500);
+        loopCount++;
+        QString kalja = (webView1->page()->currentFrame()->findFirstElement("#teksti").toPlainText() );
         qDebug() << "Code page not loaded";
-
+        qDebug() << "Test page element inner html: ";
+        qDebug() << kalja;
     }
+    */
 
+    frame = webView->page()->currentFrame();
     // return value
     qDebug() << "COOKIE CODE:";
-    qDebug() << frame->findFirstElement("#ctl03_lblTag").toPlainText();
-    emit codeReady(frame->findFirstElement("#ctl03_lblTag").toPlainText());
+
+    QString finalCode = frame->findFirstElement("#ctl03_lblTag").toPlainText();
+
+    qDebug() << finalCode;
+    if (finalCode != "") {
+        emit codeReady(finalCode);
+    }
+
 }
 
 
@@ -152,4 +167,21 @@ void SurveyFiller::getEmail() {
     }
 
 
+}
+
+QString SurveyFiller::randomEmail()
+{
+   // cookie codes are restricted to 1 per 24 hours per email
+   // so create a random string
+
+    qsrand(QTime::currentTime().msec());
+   QString chars("abcdefghijklmnopqrstuvwxyz0123456789");
+   const int randomStringLength = 4 + (qrand() % 8) ;
+   QString randomString;
+   for (int i=0; i < randomStringLength; ++i) {
+       int index = rand() % chars.length();
+       QChar nextChar = chars.at(index);
+       randomString.append(nextChar);
+   }
+   return randomString+ "@yopmail.com";
 }
