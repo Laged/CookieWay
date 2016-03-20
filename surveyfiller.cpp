@@ -64,6 +64,7 @@ void SurveyFiller::emailReady(bool a) {
 
 void SurveyFiller::fillPage() {
 
+    emit codeReady(QString("PROCESSING"));
     QWebFrame *frame = webView->page()->currentFrame();
 
     // Fill fields from top to bottom
@@ -125,7 +126,7 @@ void SurveyFiller::fillPage() {
     // return value
     qDebug() << "COOKIE CODE:";
     qDebug() << frame->findFirstElement("#ctl03_lblTag").toPlainText();
-
+    emit codeReady(frame->findFirstElement("#ctl03_lblTag").toPlainText());
 }
 
 
