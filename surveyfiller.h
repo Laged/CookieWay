@@ -24,6 +24,7 @@ private:
     QString emailAddress;
     int loadcount = 0;
     void fillPage();
+    QStringList data;
 };
 
 #endif // SURVEYFILLER_H
