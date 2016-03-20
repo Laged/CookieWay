@@ -3,7 +3,7 @@
 #include <QWebFrame>
 #include <QThread>
 #include <QObject>
-
+#include <QTimer>
 
 SurveyFiller::SurveyFiller(): webView(new QWebView(NULL)), webView1(new QWebView(NULL))
 {
@@ -17,7 +17,9 @@ SurveyFiller::SurveyFiller(): webView(new QWebView(NULL)), webView1(new QWebView
 QString SurveyFiller::fillSurvey(QStringList surveyData) {
 
     connect(webView, SIGNAL(loadFinished(bool)), SLOT(pageReady(bool)) );
-    connect(webView1, SIGNAL(loadFinished(bool)), SLOT(emailReady(bool)) );
+    //connect(webView1, SIGNAL(loadFinished(bool)), SLOT(emailReady(bool)) );
+
+    data = surveyData;
 
     webView->setGeometry(0,0,400,400);
     webView->show();
@@ -66,11 +68,11 @@ void SurveyFiller::fillPage() {
 
     // Fill fields from top to bottom
 
-    frame->evaluateJavaScript("document.getElementById('answ8351').value = 'TRANSACTION NUMBER';");
-    frame->evaluateJavaScript("document.getElementById('answ8252').value = 'DATE';");
-    // time
-    frame->evaluateJavaScript("document.getElementById('answHour8252').value = 1;");
-    frame->evaluateJavaScript("document.getElementById('answMinute8252').value = 1;");
+    frame->evaluateJavaScript("document.getElementById('answ8351').value = '"+ data[2] +"';");
+    frame->evaluateJavaScript("document.getElementById('answ8252').value = '"+data[1]+"';");
+    // time, format '16:38:03'
+    frame->evaluateJavaScript("document.getElementById('answHour8252').value = " + data[3].left(2) + ";");
+    frame->evaluateJavaScript("document.getElementById('answMinute8252').value = " + data[3].mid(3,2) + ";");
 
     // recommendation 1-10, last number of element id is the value (9)
     frame->evaluateJavaScript("document.getElementById('answc82549').click();");
@@ -97,9 +99,9 @@ void SurveyFiller::fillPage() {
     // wanna ask a question
     frame->evaluateJavaScript("document.getElementById('answ8277').value = 39405;");
     // how often do you eat at restaurant
-    frame->evaluateJavaScript("document.getElementById('answ8279').value = (Math.floor(Math.random()*10)) + 10+39405;");
+    frame->evaluateJavaScript("document.getElementById('answ8279').value = (Math.floor(Math.random()*10)) + 30+39405;");
     // how often subway
-    frame->evaluateJavaScript("document.getElementById('answ8280').value = (Math.floor(Math.random()*10)) + +30+20+39405;");
+    frame->evaluateJavaScript("document.getElementById('answ8280').value = (Math.floor(Math.random()*10)) + +30+10+39405;");
 
     // fill email
     frame->evaluateJavaScript("document.getElementById('answ8281').value = '"+ emailAddress+"@yopmail.com';");
@@ -111,13 +113,18 @@ void SurveyFiller::fillPage() {
     // submit
     frame->evaluateJavaScript("document.getElementById('btnSubmit').click();");
 
+
+    QTimer *timer = new QTimer;
     // while there is no code on the page
-    while (!(frame->findFirstElement("ctl03_lblTag").isNull() ) ) {
+    while (!(frame->findFirstElement("#ctl03_lblTag").isNull() ) ) {
+        timer->setInterval(500);
         qDebug() << "Code page not loaded";
+
     }
 
     // return value
-    frame->findFirstElement("ctl03_lblTag").toPlainText();
+    qDebug() << "COOKIE CODE:";
+    qDebug() << frame->findFirstElement("#ctl03_lblTag").toPlainText();
 
 }
 
