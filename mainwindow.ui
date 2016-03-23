@@ -43,7 +43,8 @@
       </property>
       <property name="styleSheet">
        <string notr="true">border-bottom: 1px solid black;
-background-color: white;</string>
+background-color: #f8f8f8;
+color: #79b654;</string>
       </property>
       <property name="currentIndex">
        <number>0</number>
@@ -180,7 +181,7 @@ border-top-right-radius: 45px;</string>
              <item>
               <widget class="QLabel" name="labelDrag">
                <property name="styleSheet">
-                <string notr="true">border: none; color: #79b654;</string>
+                <string notr="true">border: none; </string>
                </property>
                <property name="text">
                 <string>Drag and Drop receipt</string>
@@ -339,7 +340,7 @@ border-bottom-right-radius: 45px;</string>
       </widget>
       <widget class="QWidget" name="pageOCR">
        <property name="styleSheet">
-        <string notr="true">border: none;</string>
+        <string notr="true">border: none; background: #f8f8f8;</string>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <property name="leftMargin">
@@ -433,7 +434,8 @@ border-bottom-right-radius: 45px;</string>
       </property>
       <property name="styleSheet">
        <string notr="true">border-top: 1px solid black;
-background-color: white;</string>
+background-color: #f8f8f8;
+color: #79b654;</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item alignment="Qt::AlignHCenter">
