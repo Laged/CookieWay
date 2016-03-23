@@ -11,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     qDebug() << "Init MainWindow";
     ui->setupUi(this);
+
+
     setAcceptDrops(true);
 }
 
@@ -82,7 +84,7 @@ void MainWindow::updateResult(QString cookieCode) {
 
 void MainWindow::receiveCode(QString code) {
     qDebug() << "Update cookie code";
-
+    qDebug() << code;
     updateResult(code);
 }
 
@@ -94,20 +96,26 @@ void MainWindow::receiveCode(QString code) {
   Updates the UI with the code for a free cookie
 */
 void MainWindow::getCookie(QString fileName) {
-    //Phase 1: File is valid, OCR dat shit and get content
+    //Phase 1: File is valid, OCR dat shit and get content(
+    qDebug() << ui->stackedWidgetInput->currentIndex();
+    qDebug() << "METODIA KURSUTAAN, INDEKSI:";
+    updateStatus("Reading the receipt", 1);
+    updateResult("PROCESSING");
+    qDebug() << ui->stackedWidgetInput->currentIndex();
+
     QString currentFile = QString(fileName);
     updateImage(currentFile);
-    updateStatus("Reading the receipt", 1);
-    QStringList fileContent = currentReader->readImage(currentFile);
+    QStringList fileContent;
+    fileContent = currentReader->readImage(currentFile);
     //Debug content
-    qDebug() << fileContent;
+    //qDebug() << fileContent;
     //TODO: Phase 2: Validate content, ask for user review
-    updateStatus("Waiting for user review (TODO)", 2);
+    updateStatus("Waiting for user review (TODO)", 2); // 2
     //TODO: Phase 3: Fill survey, show cookie code
     QString cookieCode = currentFiller->fillSurvey(fileContent);
     connect(currentFiller, SIGNAL(codeReady(QString)), SLOT(receiveCode(QString)));
     updateResult(cookieCode);
-    updateStatus("Enjoy your cookie!", 3);
+    //updateStatus("Enjoy your cookie!", 1); // 3
     //TODO: :-D COOKIEZ
 }
 
