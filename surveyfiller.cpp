@@ -115,7 +115,7 @@ void SurveyFiller::fillPage() {
 
     qDebug() << finalCode;
     if (finalCode != "") {
-        emit codeReady(finalCode);
+        emit codeReady("Code: \n"+ finalCode);
     }
 
 }
